@@ -1,0 +1,42 @@
+import math
+
+'''
+
+α = konstanta perambatan 
+β = konstanta perambatan pada fase
+λ = lambda, panjang gelombang
+v = velocity, kecepatan gel
+Z = impedansi
+s = panjang dielektrik
+ω = omega, 2π * f
+f = frekuensi
+l = panjang kabel koaksial
+
+'''
+
+R_a = float(input('\nResistansi per Satuan Panjang (Ω/m) : '))
+L_a = float(input('Induktansi per Satuan Panjang (H/m) : '))
+G_a = float(input('Konduktivitas per Satuan Panjang (sem/m) : '))
+C_a = float(input('Konduksi per Satuan Panjang (F/m) : '))
+l = float(input('Panjang kabel Koaksial (m) : '))
+f = float(input('Frekuensi (Hz) : '))
+ω = math.pi * 2 * f
+
+
+print('\nPerhitungan α, β, λ, v, Z, dan s\n')
+
+α = (1/2 * R_a * math.sqrt(C_a/L_a)) + (1/2 * G_a * math.sqrt(L_a/C_a))
+β = ω * math.sqrt(C_a * L_a)
+λ = math.pi * 2 / β
+v = ω / β
+Z = math.sqrt(L_a / C_a)
+s = l / λ
+
+print("α:", α)
+print("β:", β)
+print("λ:", λ, 'm')
+print("v:", v, 'm/s')
+print("Z:", Z, 'Ω')
+print("s:", s)
+
+print('\nDone\n')
