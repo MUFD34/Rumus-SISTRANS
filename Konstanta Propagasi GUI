@@ -1,0 +1,80 @@
+import sys
+import numpy as np
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton
+
+class PropagationConstantCalculator(QWidget):
+    def __init__(self):
+        super().__init__()
+        
+        # Layout
+        self.layout = QVBoxLayout()
+
+        # Labels and Inputs for R, L, G, C, f
+        self.layout.addWidget(QLabel('Resistansi per unit panjang (R) [ohm/m]:'))
+        self.R_input = QLineEdit(self)
+        self.layout.addWidget(self.R_input)
+        
+        self.layout.addWidget(QLabel('Induktansi per unit panjang (L) [H/m]:'))
+        self.L_input = QLineEdit(self)
+        self.layout.addWidget(self.L_input)
+        
+        self.layout.addWidget(QLabel('Konduktansi per unit panjang (G) [S/m]:'))
+        self.G_input = QLineEdit(self)
+        self.layout.addWidget(self.G_input)
+        
+        self.layout.addWidget(QLabel('Kapasitansi per unit panjang (C) [F/m]:'))
+        self.C_input = QLineEdit(self)
+        self.layout.addWidget(self.C_input)
+        
+        self.layout.addWidget(QLabel('Frekuensi (f) [Hz]:'))
+        self.f_input = QLineEdit(self)
+        self.layout.addWidget(self.f_input)
+        
+        # Button to calculate
+        self.calc_button = QPushButton('Hitung', self)
+        self.calc_button.clicked.connect(self.calculate)
+        self.layout.addWidget(self.calc_button)
+
+        # Output Labels
+        self.alpha_label = QLabel('Konstanta Atenuasi (alpha):')
+        self.layout.addWidget(self.alpha_label)
+        
+        self.beta_label = QLabel('Konstanta Fase (beta):')
+        self.layout.addWidget(self.beta_label)
+
+        # Set Layout
+        self.setLayout(self.layout)
+        self.setWindowTitle("Penghitung Konstanta Propagasi")
+
+    def calculate(self):
+        try:
+            # Retrieve inputs
+            R = float(self.R_input.text())
+            L = float(self.L_input.text())
+            G = float(self.G_input.text())
+            C = float(self.C_input.text())
+            f = float(self.f_input.text())
+
+            # Calculate omega
+            omega = 2 * np.pi * f
+
+            # Calculate propagation constant (gamma)
+            gamma = np.sqrt((R + 1j * omega * L) * (G + 1j * omega * C))
+            
+            # Calculate alpha (attenuation constant) and beta (phase constant)
+            alpha = np.real(gamma)
+            beta = np.imag(gamma)
+
+            # Update labels with results
+            self.alpha_label.setText(f'Konstanta Atenuasi (alpha): {alpha:.6f} Np/m')
+            self.beta_label.setText(f'Konstanta Fase (beta): {beta:.6f} rad/m')
+
+        except ValueError:
+            self.alpha_label.setText('Input tidak valid! Masukkan angka valid.')
+            self.beta_label.setText('')
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    calculator = PropagationConstantCalculator()
+    calculator.show()
+    sys.exit(app.exec_())
