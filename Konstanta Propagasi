@@ -1,0 +1,19 @@
+import numpy as np
+
+# Definisi parameter
+R = 10  # Resistansi per unit panjang (ohm/m)
+L = 5e-6  # Induktansi per unit panjang (H/m)
+G = 1e-3  # Konduktansi per unit panjang (S/m)
+C = 8e-12  # Kapasitansi per unit panjang (F/m)
+f = 1e9   # Frekuensi (Hz)
+
+# Menghitung konstanta propagasi
+omega = 2 * np.pi * f  # Frekuensi sudut
+gamma = np.sqrt((R + 1j * omega * L) * (G + 1j * omega * C))
+
+# Menampilkan hasil
+alpha = np.real(gamma)  # Konstanta atenuasi
+beta = np.imag(gamma)   # Konstanta fase
+
+print(f"Konstanta Atenuasi (alpha): {alpha} Np/m")
+print(f"Konstanta Fase (beta): {beta} rad/m")
